@@ -1,51 +1,54 @@
 class Solution {
 
     public long maxSumTrionic(int[] nums) {
-        
         int n = nums.length;
-        long res= -1 * (long)1e16;
+        long ans = Long.MIN_VALUE;
 
-        for(int i=1;i<n-2;i++){
+        for (int i = 0; i < n; i++) {
+            int j = i + 1;
+            long res = 0;
 
-            int a = i; 
-            int b = i; 
+            while (j < n && nums[j - 1] < nums[j]) {
+                j++;
+            }
+            int p = j - 1;
 
-            long net = nums[a];
-
-            while(b+1<n && nums[b+1] < nums[b]){
-                net+=(long)nums[b+1];
-                b++;
+            if (p == i) {
+                continue;
             }
 
-            if(b==a)continue;
+            res += nums[p] + nums[p - 1];
+            while (j < n && nums[j - 1] > nums[j]) {
+                res += nums[j];
+                j++;
+            }
+            int q = j - 1;
 
-            int c= b; 
-
-            long left = 0;
-            long right = 0;
-
-            long lx =Integer.MIN_VALUE;
-            long rx =Integer.MIN_VALUE;
-
-            while(a-1>=0 && nums[a-1] < nums[a]){
-                left+=(long)nums[a-1];
-                lx = Math.max(lx, left);
-                a--;
+            if (q == p || q == n - 1 || (j < n && nums[j] <= nums[q])) {
+                i = q;
+                continue;
             }
 
-            if(a==i)continue;
-
-            while(b+1<n && nums[b+1] > nums[b]){
-                right+=(long)nums[b+1];
-                rx = Math.max(rx, right);
-                b++;
+            res += nums[q + 1];
+            long maxSum = 0;
+            long sum = 0;
+            for (int k = q + 2; k < n && nums[k] > nums[k - 1]; k++) {
+                sum += nums[k];
+                maxSum = Math.max(maxSum, sum);
             }
+            res += maxSum;
 
-            if(b==c)continue;
-            i=b-1;
-            res = Math.max( res, lx+rx+net);
-
+            maxSum = 0;
+            sum = 0;
+            for (int k = p - 2; k >= i; k--) {
+                sum += nums[k];
+                maxSum = Math.max(maxSum, sum);
+            }
+            res += maxSum;
+            ans = Math.max(ans, res);
+            i = q - 1;
         }
-        return res;
+
+        return ans;
     }
 }
