@@ -1,8 +1,8 @@
 class Solution {
     public String replaceDigits(String s) {
         char[] str = s.toCharArray();
-        for(int itr = 1; itr < s.length(); itr+=2){
-            str[itr] = (char)(str[itr-1] + (str[itr] - '0'));
+        for(int i = 1; i < str.length; i += 2){
+            str[i] = (char)(str[i - 1] + (str[i] - '0'));
         }
         return new String(str);
     }
