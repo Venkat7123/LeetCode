@@ -1,33 +1,36 @@
 class Solution {
+    public int getmn(int[] arr){
+        Arrays.sort(arr);
+        int mn = Integer.MAX_VALUE;
+        for(int i = 1;i< arr.length;i++){
+            if(arr[i - 1] != arr[i]){
+                mn = Math.min(mn, Math.abs(arr[i] - arr[i - 1]));
+            }
+            
+        }
+        return mn == Integer.MAX_VALUE? 0:mn;
+    }
     public int[][] minAbsDiff(int[][] grid, int k) {
+        // 1 1 1
+        // 1 1 1
+        // 1 1 1
         int m = grid.length, n = grid[0].length;
-        int rows = m - k + 1, cols = n - k + 1;
-
-        int[][] ans = new int[rows][cols];
-
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                List<Integer> vals = new ArrayList<>();
-
-                for (int x = i; x < i + k; x++) {
-                    for (int y = j; y < j + k; y++) {
-                        vals.add(grid[x][y]);
+        int[][] answ = new int[m - k + 1][n - k + 1];
+        for(int row = 0; row < m - k + 1;row++){
+            for(int col = 0; col < n - k + 1;col++){
+                int[] arr = new int[k * k];
+                int idx = 0;
+                for(int i = row;i < row + k;i++){
+                    for(int j = col;j < col + k;j++){
+                        arr[idx] = grid[i][j];
+                        idx++;
                     }
                 }
+                answ[row][col] = getmn(arr);
+                
 
-                Collections.sort(vals);
-
-                int best = Integer.MAX_VALUE;
-                for (int t = 1; t < vals.size(); t++) {
-                    if (!vals.get(t).equals(vals.get(t - 1))) {
-                        best = Math.min(best, vals.get(t) - vals.get(t - 1));
-                    }
-                }
-
-                ans[i][j] = (best == Integer.MAX_VALUE) ? 0 : best;
             }
         }
-
-        return ans;
+        return answ;
     }
 }
