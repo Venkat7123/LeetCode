@@ -1,49 +1,51 @@
 class Solution {
+    public String generateString(String a, String b) {
+        int x = a.length();
+        int y = b.length();
+        int len = x + y - 1;
 
-    public String generateString(String str1, String str2) {
-        int n = str1.length();
-        int m = str2.length();
-        char[] s = new char[n + m - 1];
-        int[] fixed = new int[n + m - 1];
+        char[] res = new char[len];
+        boolean[] lock = new boolean[len];
 
-        for (int i = 0; i < s.length; i++) {
-            s[i] = 'a';
-        }
+        for (int i = 0; i < len; i++) res[i] = 'a';
 
-        for (int i = 0; i < n; i++) {
-            if (str1.charAt(i) == 'T') {
-                for (int j = i; j < i + m; j++) {
-                    if (fixed[j] == 1 && s[j] != str2.charAt(j - i)) {
-                        return "";
-                    } else {
-                        s[j] = str2.charAt(j - i);
-                        fixed[j] = 1;
-                    }
+        for (int i = 0; i < x; i++) {
+            if (a.charAt(i) == 'T') {
+                for (int j = 0; j < y; j++) {
+                    int p = i + j;
+                    if (p >= len) return "";
+                    if (lock[p] && res[p] != b.charAt(j)) return "";
+                    res[p] = b.charAt(j);
+                    lock[p] = true;
                 }
             }
         }
 
-        for (int i = 0; i < n; i++) {
-            if (str1.charAt(i) == 'F') {
-                boolean flag = false;
-                int idx = -1;
-                for (int j = i + m - 1; j >= i; j--) {
-                    if (str2.charAt(j - i) != s[j]) {
-                        flag = true;
-                    }
-                    if (idx == -1 && fixed[j] == 0) {
-                        idx = j;
+        for (int i = 0; i < x; i++) {
+            if (a.charAt(i) == 'F') {
+                boolean same = true;
+                for (int j = 0; j < y; j++) {
+                    if (res[i + j] != b.charAt(j)) {
+                        same = false;
+                        break;
                     }
                 }
-                if (flag) {
-                    continue;
-                } else if (idx != -1) {
-                    s[idx] = 'b';
-                } else {
-                    return "";
+
+                if (same) {
+                    boolean changed = false;
+                    for (int j = y - 1; j >= 0; j--) {
+                        int p = i + j;
+                        if (!lock[p]) {
+                            res[p] = 'b';
+                            changed = true;
+                            break;
+                        }
+                    }
+                    if (!changed) return "";
                 }
             }
         }
-        return new String(s);
+
+        return new String(res);
     }
 }
