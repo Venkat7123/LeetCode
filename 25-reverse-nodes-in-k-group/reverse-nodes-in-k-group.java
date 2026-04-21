@@ -28,12 +28,7 @@ class Solution {
             curr = safe;
             count++;
         }
-
-        // connect remaining list recursively
-        if(curr != null){
-            head.next = reverseKGroup(curr, k);
-        }
-
+        if(curr != null) head.next = reverseKGroup(curr, k);
         return prev;
     }
 }
