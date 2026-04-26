@@ -1,34 +1,45 @@
 class Solution {
-    static int[][] dirs = { { 0, -1 }, { 0, 1 }, { -1, 0 }, { 1, 0 } };
-
     public boolean containsCycle(char[][] grid) {
-        int m = grid.length;
-        int n = grid[0].length;
-        boolean[] visit = new boolean[m * n];
+        int rows = grid.length;
+        int cols = grid[0].length;
+        int[] groups = new int[rows * cols];
 
-        for (int i = 0; i < m; i++)
-            for (int j = 0; j < n; j++)
-                if (!visit[i * n + j] && dfs(i, j, -1, -1, grid, visit, m, n))
-                    return true;
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                groups[i * cols + j] = i * cols + j;
+            }
+        }
 
-        return false;
-    }
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
 
-    private static boolean dfs(int r, int c, int pr, int pc, char[][] grid, boolean[] visit, int m, int n) {
-        visit[r * n + c] = true;
+                int id = i * cols + j;
+                char c = grid[i][j];
 
-        for (int k = 0; k < 4; k++) {
-            int nr = r + dirs[k][0];
-            int nc = c + dirs[k][1];
+                if (i + 1 < rows && grid[i+1][j] == c) {
+                    int aGroup = find(id, groups);
+                    int bGroup = find( (i + 1) * cols + j, groups);
 
-            if ((nr != pr || nc != pc) &&
-                    nr >= 0 && nr < m && nc >= 0 &&
-                    nc < n && grid[nr][nc] == grid[r][c])
-                if (visit[nr * n + nc] || dfs(nr, nc, r, c, grid, visit, m, n))
-                    return true;
+                    if (aGroup == bGroup) return true;
+                    groups[aGroup] = bGroup;
+                }
+
+                if (j + 1 < cols && grid[i][j+1] == c) {
+                    int aGroup = find(id, groups);
+                    int bGroup = find( i * cols + j + 1, groups);
+
+                    if (aGroup == bGroup) return true;
+                    groups[aGroup] = bGroup;
+                }
+            }
         }
 
         return false;
     }
 
+    private int find(int id, int[] groups) {
+        if (id == groups[id]) return id;
+        groups[id] = find(groups[id], groups);
+        return groups[id];
+    }
 }
