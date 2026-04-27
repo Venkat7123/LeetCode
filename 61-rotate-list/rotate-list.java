@@ -23,7 +23,7 @@ class Solution {
 
         curr.next = head;
 
-        for(int i = 1; i <= len - k; i++) curr = curr.next;
+        for(int i = 0; i < len - k; i++) curr = curr.next;
         ListNode nn = curr.next;
         curr.next = null;
         return nn;
