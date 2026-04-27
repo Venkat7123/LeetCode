@@ -23,8 +23,8 @@ class Solution {
         if(root == null) return 0;
         int left = Math.max(dfs(root.left), 0);
         int right = Math.max(dfs(root.right), 0);
-        int pathSum = root.val + left + right;
-        ans = Math.max(ans, pathSum);
+        int sum = root.val + left + right;
+        ans = Math.max(sum, ans);
         return root.val + Math.max(left, right);
     }
 }
