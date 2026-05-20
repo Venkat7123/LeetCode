@@ -1,19 +1,24 @@
 class Solution {
     public double myPow(double x, int n) {
-        long exp = n;
-        if(exp < 0){
+        long N = n;
+        if (n < 0) {
             x = 1.0 / x;
-            exp = -exp;
+            N = -N;
         }
-        double base = x;
-        double result = 1.0;
-        while(exp > 0){
-            if(exp % 2 == 1){
-                result *= base;
-            }
-            base *= base;
-            exp /= 2; 
-        }
-        return result;
+        if (N == 0)
+            return 1;
+
+        return power(x, N);
+
+    }
+
+    public double power(double x, long n) {
+        if (n == 1)
+            return x;
+
+        if (n % 2 == 0)
+            return power(x * x, n / 2);
+
+        return x * power(x, n - 1);
     }
 }
