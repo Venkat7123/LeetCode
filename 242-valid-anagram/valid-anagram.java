@@ -8,7 +8,7 @@ class Solution {
             freq[ch - 'a']--;
         }
         for(int i : freq){
-            if(i > 0 || i < 0) return false;
+            if(i != 0) return false;
         }
         return true;
     }
