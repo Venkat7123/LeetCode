@@ -1,26 +1,27 @@
 class Solution {
-    public boolean canReach(String s, int minJ, int maxJ) {
-        int n = s.length();
+    public boolean canReach(String s, int minJump, int maxJump) {
+        boolean[] visited = new boolean[s.length()];
+        visited[0] = true;
 
-        if (s.charAt(n - 1) == '1')
-            return false;
+        int farthest = 0;
 
-        int[] dp = new int[n];
-        dp[0] = 1;
-        int reach = 0, maxR = maxJ;
-
-        for (int i = minJ; i < n; i++) {
-            if (i > maxR) return false;
-
-            reach += dp[i - minJ];
-            if (i > maxJ) reach -= dp[i - maxJ - 1];
-
-            if (reach > 0 && s.charAt(i) == '0') {
-                dp[i] = 1;
-                maxR = i + maxJ;
+        for (int i = 0; i < s.length(); i++) {
+            if (!visited[i]) {
+                continue;
             }
+
+            int start = Math.max(i + minJump, farthest + 1);
+            int end = Math.min(i + maxJump, s.length() - 1);
+
+            for (int j = start; j <= end; j++) {
+                if (s.charAt(j) == '0') {
+                    visited[j] = true;
+                }
+            }
+
+            farthest = end;
         }
 
-        return reach > 0;
+        return visited[s.length() - 1];
     }
 }
