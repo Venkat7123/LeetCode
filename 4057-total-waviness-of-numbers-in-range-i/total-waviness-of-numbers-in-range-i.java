@@ -1,24 +1,30 @@
 class Solution {
-    private static final int MAX = 100005;
-    private static final int[] dp = new int[MAX];
-    private static final int[] pref = new int[MAX];
+    public int helper(int num) {
+        int ans=0;
 
-    static {
-        for (int i = 100; i < MAX; i++) {
-            int d1 = i % 10;
-            int d2 = (i / 10) % 10;
-            int d3 = (i / 100) % 10;
+        int last=num%10;
+        num/=10;
+        int curr=num%10;
+        num/=10;
 
-            int wave = 0;
-            if (d2 > Math.max(d3, d1) || d2 < Math.min(d3, d1))
-                wave++;
-
-            dp[i] = dp[i / 10] + wave;
-            pref[i] = pref[i - 1] + dp[i];
+        while(num>0) {
+            int next=num%10;
+            num/=10;
+            if((curr>last && curr>next) || (curr<last && curr<next)) {
+                ans++;
+            }
+            last=curr;
+            curr=next;
         }
+        return ans;
     }
-
-    public int totalWaviness(int A, int B) {
-        return pref[B] - pref[A - 1];
+    public int totalWaviness(int num1, int num2) {
+        
+        int ans=0;
+        for(int i=num1;i<=num2;i++) {
+            if(i<100) continue;
+            ans+=helper(i);
+        }
+        return ans;
     }
 }
