@@ -1,42 +1,46 @@
+import java.util.*;
+
 class Solution {
-
-    private static final int MOD = 1_000_000_007;
-
-    private int qpow(int x, int y) {
-        long res = 1;
-        long base = x;
-        while (y > 0) {
-            if ((y & 1) == 1) {
-                res = (res * base) % MOD;
-            }
-            base = (base * base) % MOD;
-            y >>= 1;
-        }
-        return (int) res;
-    }
-
-    private int dfs(List<List<Integer>> g, int x, int f) {
-        int maxDep = 0;
-        for (int y : g.get(x)) {
-            if (y == f) continue;
-            maxDep = Math.max(maxDep, dfs(g, y, x) + 1);
-        }
-        return maxDep;
-    }
-
+    static final int MOD = 1_000_000_007;
+    List<Integer>[] tree;
+    
     public int assignEdgeWeights(int[][] edges) {
         int n = edges.length + 1;
-        List<List<Integer>> g = new ArrayList<>();
-        for (int i = 0; i <= n; i++) {
-            g.add(new ArrayList<>());
-        }
+        tree = new List[n + 1];
+        for (int i = 1; i <= n; i++) tree[i] = new ArrayList<>();
+        
         for (int[] e : edges) {
-            int u = e[0];
-            int v = e[1];
-            g.get(u).add(v);
-            g.get(v).add(u);
+            int u = e[0], v = e[1];
+            tree[u].add(v);
+            tree[v].add(u);
         }
-        int maxDep = dfs(g, 1, 0);
-        return qpow(2, maxDep - 1);
+        
+        int[] depth = new int[n + 1];
+        dfs(1, -1, depth);
+        
+        int maxDepth = 0;
+        for (int d : depth) maxDepth = Math.max(maxDepth, d);
+        
+        if (maxDepth == 0) return 0;
+        return powMod(2, maxDepth - 1);
+    }
+    
+    private void dfs(int u, int parent, int[] depth) {
+        for (int v : tree[u]) {
+            if (v != parent) {
+                depth[v] = depth[u] + 1;
+                dfs(v, u, depth);
+            }
+        }
+    }
+    
+    private int powMod(long a, long b) {
+        long res = 1;
+        while (b > 0) {
+            if ((b & 1) == 1) res = (res * a) % MOD;
+            a = (a * a) % MOD;
+            b >>= 1;
+        }
+        return (int) res;
     }
 }
