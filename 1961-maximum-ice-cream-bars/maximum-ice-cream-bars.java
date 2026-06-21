@@ -1,12 +1,33 @@
 class Solution {
     public int maxIceCream(int[] costs, int coins) {
-        Arrays.sort(costs);
-        int ans = 0;
+
+        int maxCost = 0;
         for (int cost : costs) {
-            if (cost > coins) break;
-            ans++;
-            coins -= cost;
+            maxCost = Math.max(maxCost, cost);
         }
-        return ans;
+
+        int[] freq = new int[maxCost + 1];
+
+        for (int cost : costs) {
+            freq[cost]++;
+        }
+
+        int bars = 0;
+
+        for (int price = 1; price <= maxCost; price++) {
+
+            if (freq[price] == 0)
+                continue;
+
+            int canBuy = Math.min(freq[price], coins / price);
+
+            bars += canBuy;
+            coins -= canBuy * price;
+
+            if (coins < price)
+                break;
+        }
+
+        return bars;
     }
 }
