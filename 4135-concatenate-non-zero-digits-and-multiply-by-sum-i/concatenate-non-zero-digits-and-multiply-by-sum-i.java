@@ -4,7 +4,6 @@ class Solution {
         while(n > 0){
             int dig = n % 10;
             if(dig != 0){
-                System.out.println(dig);
                 num += dig * i;
                 i *= 10;
                 sum += dig;
