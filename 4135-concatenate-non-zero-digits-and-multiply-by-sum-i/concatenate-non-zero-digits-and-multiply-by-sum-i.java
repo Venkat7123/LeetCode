@@ -5,9 +5,9 @@ class Solution {
             int dig = n % 10;
             if(dig != 0){
                 System.out.println(dig);
-                num += (long)dig * i;
+                num += dig * i;
                 i *= 10;
-                sum += (long)dig;
+                sum += dig;
             }
             n /= 10;
         }
