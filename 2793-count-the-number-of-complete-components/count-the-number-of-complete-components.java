@@ -1,40 +1,39 @@
 class Solution {
-    static int V, E;
-
     public int countCompleteComponents(int n, int[][] edges) {
-        List<Integer>[] A = new ArrayList[n];
-        Arrays.setAll(A, _ -> new ArrayList<>());
+        List<Integer>[] adjList = new ArrayList[n];
 
-        for (int[] e : edges) {
-            A[e[0]].add(e[1]);
-            A[e[1]].add(e[0]);
+        for(int vertex = 0; vertex < n; vertex++) {
+            adjList[vertex] = new ArrayList<>();
         }
 
-        boolean[] vis = new boolean[n];
-        int res = 0;
-
-        for (int i = 0; i < n; i++) {
-            boolean state = vis[i];
-
-            if (!state) {
-                V = 0; E = 0;
-
-                dfs(i, A, vis);
-
-                if (E == V * (V - 1)) res++;
-            }
+        for(int i=0; i<edges.length; i++) {
+            adjList[edges[i][0]].add(edges[i][1]);
+            adjList[edges[i][1]].add(edges[i][0]);
         }
 
-        return res;
+        int counter = 0;
+        boolean[] visited = new boolean[n];
+        for(int i=0; i<n; i++) {
+            if(visited[i] == true) continue;
+            int[] componentInfo = new int[2];
+            dfs(adjList, visited, i, componentInfo);
+            if(componentInfo[0] * (componentInfo[0] - 1) == componentInfo[1]) counter++;
+            
+        }
+        return counter;
+
     }
 
-    private void dfs(int x, List<Integer>[] A, boolean[] vis) {
-        V++;
-        E += A[x].size();
-        vis[x] = true;
+    public void dfs(List<Integer>[] adjList, boolean[] visited, int ind, int[] componentInfo) {
+        visited[ind] = true;
+        componentInfo[0]++;
+        componentInfo[1] += adjList[ind].size();
 
-        for (int state : A[x])
-            if (!vis[state])
-                dfs(state, A, vis);
+        for(int i=0; i<adjList[ind].size(); i++) {
+            int node = adjList[ind].get(i);
+            if(visited[node] == false) {
+                dfs(adjList, visited, node, componentInfo);
+            }
+        }
     }
 }
